@@ -28,8 +28,6 @@ app.use(morgan('combined', {stream: accessLogStream}));
 app.use(express.static('public'));
 
 
-
-
 //setting endpoints for API
 app.get('/', (req, res) => {
   res.send('Welcome to my app!');
@@ -38,6 +36,12 @@ app.get('/', (req, res) => {
 app.get('/movies', (req, res) => {
   res.json(Top10Movies);
 });
+
+// error-handling middleware function
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
 
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
