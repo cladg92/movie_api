@@ -5,10 +5,128 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>myFlix</title>
         </head>
+        <style>
+            table, th, td {
+              border:1px solid black;
+            }
+        </style>
         <body>
             <h1>MyFLix</h1>
             <p>
                 Web application providing users with access to information about different movies, directors, and genres. 
             </p>
+            <div class = "URIs">
+                <table>
+                    <tr>
+                      <th>Request</th>
+                      <th>URL</th>
+                      <th>HTTP Method</th>
+                      <th>Request body data format</th>
+                      <th>Response body data format</th>
+                    </tr>
+                    <tr>
+                      <td>Get list of movies</td>
+                      <td>/movies</td>
+                      <td>GET</td>
+                      <td>None</td>
+                      <td>A JSON object holding data about all the movies</td>
+                    </tr>
+                    <tr>
+                        <td>Get data about a single movie by title</td>
+                        <td>/movies/[title]</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>A JSON object holding data about a single movie. Example: <br>
+                            "{<br>
+                                id : 1,<br>
+                                title : "title1",<br>
+                                genre : "Thriller"
+                            }"
+                            </td>
+                      </tr>
+                      <tr>
+                        <td>Return data about a genre (description) by name</td>
+                        <td>/genres/[name]</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>A JSON object holding data about a single genre. Example: <br>
+                            "{<br>
+                                id : 1,<br>
+                                name : "Thriller"<br>
+                            }"
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Return data about a director by name</td>
+                        <td>/directors/[name]</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>A JSON object holding data about a single director. Example: <br>
+                            "{<br>
+                                name : "John",<br>
+                                birthYear : 1926,<br>
+                                deathYear : 2000<br>
+                            }"
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Get list of users</td>
+                        <td>/users</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>A JSON object holding data about all the users</td>
+                      </tr>
+                      <tr>
+                        <td>Add new user</td>
+                        <td>/users</td>
+                        <td>POST</td>
+                        <td>A JSON object holding data about the user to add, structured like:<br>
+                            "{<br>
+                                username : "Paulina Gomez", <br>
+                                email : "paulina@gmail.com" <br>
+                            }"
+                            </td>
+                        <td>A JSON object holding data about the user that was added, including an ID. Example: <br>
+                            "{<br>
+                                id : 5, <br>
+                                username : "paulina_93", <br>
+                                email : "paulina@gmail.com" <br>
+                            }"
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Update user info (username) by ID</td>
+                        <td>/users/[id]/[username]</td>
+                        <td>PUT</td>
+                        <td>None</td>
+                        <td>A text message indicating the user that was updated</td>
+                      </tr>
+                      <tr>
+                        <td>Add movie to list of favorites</td>
+                        <td>/users/[username]/favorites</td>
+                        <td>POST</td>
+                        <td>A JSON object holding data about the movie to add. Example: <br>
+                            "{<br>
+                                title : "title1",<br>
+                                genre : "Thriller"
+                            }"</td>
+                        <td>A text message indicating that a movie has been added</td>
+                      </tr>
+                      <tr>
+                        <td>Remove movie from list of favorites</td>
+                        <td>/users/[username]/favorites/[title]</td>
+                        <td>DELETE</td>
+                        <td>None</td>
+                        <td>A text message indicating that a movie has been removed</td>
+                      </tr>
+                      <tr>
+                        <td>Remove user (deregister)</td>
+                        <td>/users/[username]</td>
+                        <td>DELETE</td>
+                        <td>None</td>
+                        <td>A text message indicating that the user has been removed</td>
+                      </tr>
+                  </table>
+            </div>
         </body>
     </html>
