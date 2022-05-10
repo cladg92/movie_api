@@ -33,15 +33,29 @@
                     </tr>
                     <tr>
                         <td>Get data about a single movie by title</td>
-                        <td>/movies/[title]</td>
+                        <td>/movies/[Title]</td>
                         <td>GET</td>
                         <td>None</td>
                         <td>A JSON object holding data about a single movie. Example: <br>
                             "{<br>
-                                id : 1,<br>
-                                title : "title1",<br>
-                                genre : "Thriller"
-                            }"
+                              _id: "62739aba91f877a2ad6f0704",<br>
+                              Title: "Silence of the Lambs",<br>
+                              Description: "A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer.",<br>
+                              Genre: {<br>
+                                Name: "Thriller",<br>
+                                Description: "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."<br>
+                              },<br>
+                              ReleaseYear: "1991",<br>
+                              Director: {<br>
+                                Name: "Jonathan Demme",<br>
+                                Bio: "Robert Jonathan Demme was an American director, producer, and screenwriter.",<br>
+                                Birth: "1944",<br>
+                                Death: "2017"<br>
+                              },<br>
+                              ImagePath: "silenceofthelambs.png",<br>
+                              Actors: [ "Anthony Hopkins", "Jodie Foster", "Lawrence A. Bonney" ],<br>
+                              Featured: true<br>
+                            }
                             </td>
                       </tr>
                       <tr>
@@ -51,21 +65,22 @@
                         <td>None</td>
                         <td>A JSON object holding data about a single genre. Example: <br>
                             "{<br>
-                                id : 1,<br>
-                                name : "Thriller"<br>
+                              Name: "Thriller",<br>
+                              Description: "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."<br>
                             }"
                         </td>
                       </tr>
                       <tr>
                         <td>Return data about a director by name</td>
-                        <td>/directors/[name]</td>
+                        <td>/directors/[Name]</td>
                         <td>GET</td>
                         <td>None</td>
                         <td>A JSON object holding data about a single director. Example: <br>
                             "{<br>
-                                name : "John",<br>
-                                birthYear : 1926,<br>
-                                deathYear : 2000<br>
+                              Name: "Jonathan Demme",<br>
+                              Bio: "Jonathan Demme was an American director, producer, and screenwriter.",<br>
+                              Birth: "1944",<br>
+                              Death: "2017"<br>
                             }"
                         </td>
                       </tr>
@@ -77,51 +92,81 @@
                         <td>A JSON object holding data about all the users</td>
                       </tr>
                       <tr>
+                        <td>Get a user by username</td>
+                        <td>/users/[Username]</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>A JSON object holding data about a single user. Example: <br>
+                        "{<br>
+                          _id: "62739ee191f877a2ad6f0711",<br>
+                          Username: "catty30",<br>
+                          Password: "lkglglg4",<br>
+                          Email: "catty86@gmail.com",<br>
+                          BirthDate: "1986-12-25T00:00:00.000Z",<br>
+                          FavoriteMovies: [<br>
+                              "62739ba091f877a2ad6f0707",<br>
+                              "62739b8291f877a2ad6f0706"<br>
+                          ]<br>
+                        }"
+                          </td>
+                      </tr>
+                      <tr>
                         <td>Add new user</td>
                         <td>/users</td>
                         <td>POST</td>
                         <td>A JSON object holding data about the user to add, structured like:<br>
                             "{<br>
-                                username : "Paulina Gomez", <br>
-                                email : "paulina@gmail.com" <br>
+                              Username: "marcodg",<br>
+                              Password: "1234test",<br>
+                              Email: "marcoblack@gmail.com"<br>
                             }"
                             </td>
                         <td>A JSON object holding data about the user that was added, including an ID. Example: <br>
                             "{<br>
-                                id : 5, <br>
-                                username : "paulina_93", <br>
-                                email : "paulina@gmail.com" <br>
+                              _id: "627a17b48ceb73c88f60fc04",<br>
+                              Username: "marcodg",<br>
+                              Password: "1234test",<br>
+                              Email: "marcoblack@gmail.com",<br>
+                              FavoriteMovies: []<br>
                             }"
                         </td>
                       </tr>
                       <tr>
-                        <td>Update user info (username) by ID</td>
-                        <td>/users/[id]/[username]</td>
+                        <td>Update user info by username</td>
+                        <td>/users/[Username]</td>
                         <td>PUT</td>
-                        <td>None</td>
-                        <td>A text message indicating the user that was updated</td>
+                        <td>A JSON object holding the data to update. Example: <br>
+                          "{<br>
+                            Password: "1234testupdated"<br>
+                          }"
+                        </td>
+                        <td>A JSON object holding data about the updated user. Example: <br>
+                          "{<br>
+                            _id: "627a17b48ceb73c88f60fc04",<br>
+                            Username: "marcodg",<br>
+                            Password: "1234testupdated",<br>
+                            Email: "marcoblack@gmail.com",<br>
+                            FavoriteMovies: []<br>
+                          }"
+                        </td>
                       </tr>
                       <tr>
                         <td>Add movie to list of favorites</td>
-                        <td>/users/[username]/favorites</td>
+                        <td>/users/[Username]/movies/[MovieID]</td>
                         <td>POST</td>
-                        <td>A JSON object holding data about the movie to add. Example: <br>
-                            "{<br>
-                                title : "title1",<br>
-                                genre : "Thriller"
-                            }"</td>
-                        <td>A text message indicating that a movie has been added</td>
+                        <td>None</td>
+                        <td>A text message indicating that the movie has been added</td>
                       </tr>
                       <tr>
                         <td>Remove movie from list of favorites</td>
-                        <td>/users/[username]/favorites/[title]</td>
+                        <td>/users/[Username]/movies/[MovieID]</td>
                         <td>DELETE</td>
                         <td>None</td>
                         <td>A text message indicating that a movie has been removed</td>
                       </tr>
                       <tr>
                         <td>Remove user (deregister)</td>
-                        <td>/users/[username]</td>
+                        <td>/users/[Username]</td>
                         <td>DELETE</td>
                         <td>None</td>
                         <td>A text message indicating that the user has been removed</td>
