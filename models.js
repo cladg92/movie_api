@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+    bcrypt = require('bcrypt'); // for hashing password
 
 // Create schemas for collections
 
@@ -28,6 +29,16 @@ let userSchema = mongoose.Schema ({
     BirthDate: Date,
     FavoriteMovies: [{type: mongoose.Schema.Types.ObjectId, ref:'Movie'}]
 });
+
+// hashing of submitted passwords
+userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+}
+
+// compare submitted hash passwords with the hashed password stored in db
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+};
 
 // Create models that use the schemas
 
