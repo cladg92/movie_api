@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const {check, validationResult} = require('express-validator'); // for user input validation
 const cors = require('cors');
 // Define allowed domains (origins) for cross-origin resource sharing (CORS)
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ['http://localhost:8080', 'https://myflixapi92.herokuapp.com/'];
 
 app.use(cors({
   origin: (origin, callback) => {
