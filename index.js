@@ -111,6 +111,7 @@ app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (r
 // Get all users
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
+    .populate('FavoriteMovies', '_id Title')
     .then((users) => {
       res.status(201).json(users);
     })
@@ -123,6 +124,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
 // Get a user by username
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
+    .populate('FavoriteMovies', '_id Title')
     .then((user) => {
       res.json(user);
     })
