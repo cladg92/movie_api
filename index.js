@@ -146,12 +146,11 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 }*/
 app.post('/users', 
 // Validation logic here for request
-[
   check('Username', 'Username is required and must be at least 5 characters long').isLength({min: 5}),
   check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
   check('Password', 'Password is required').not().isEmpty(),
-  check('Email', 'Email does not appear to be valid').isEmail()
-], (req, res) => {
+  check('Email', 'Email does not appear to be valid').isEmail(),
+  (req, res) => {
   // check the validation object for errors
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
