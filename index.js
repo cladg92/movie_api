@@ -15,6 +15,7 @@ const Users = Models.User;
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
+const jwt_decode = require('jwt-decode');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const {check, validationResult} = require('express-validator'); // for user input validation
@@ -207,6 +208,15 @@ app.put('/users/:Username',
 ,
  passport.authenticate('jwt', { session: false }), 
  (req, res) => {
+  // check for currently logged in user from token
+  let authHeader = req.headers.authorization;
+  let token = authHeader.split(' ')[1];
+  let decoded = jwt_decode(token);
+  let user = req.params.Username;
+  if (decoded.Username !== user){
+    res.status(401).send('This operation is not possible');
+  } else {
+
   // check the validation object for errors
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -231,10 +241,20 @@ app.put('/users/:Username',
       res.json(updatedUser);
     }
   });
+  }
 });
 
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // check for currently logged in user from token
+  let authHeader = req.headers.authorization;
+  let token = authHeader.split(' ')[1];
+  let decoded = jwt_decode(token);
+  let user = req.params.Username;
+  if (decoded.Username !== user){
+    res.status(401).send('This operation is not possible');
+  } else {
+
   Users.findOneAndUpdate({ Username: req.params.Username }, {
      $push: { FavoriteMovies: req.params.MovieID }
    },
@@ -247,10 +267,20 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
       res.json(updatedUser);
     }
   });
+  }
 });
 
 // Remove a movie from a user's list of favorites
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // check for currently logged in user from token
+  let authHeader = req.headers.authorization;
+  let token = authHeader.split(' ')[1];
+  let decoded = jwt_decode(token);
+  let user = req.params.Username;
+  if (decoded.Username !== user){
+    res.status(401).send('This operation is not possible');
+  } else {
+
   Users.findOneAndUpdate({ Username: req.params.Username }, {
      $pull: { FavoriteMovies: req.params.MovieID }
    },
@@ -263,10 +293,20 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
       res.json(updatedUser);
     }
   });
+  }
 });
 
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // check for currently logged in user from token
+  let authHeader = req.headers.authorization;
+  let token = authHeader.split(' ')[1];
+  let decoded = jwt_decode(token);
+  let user = req.params.Username;
+  if (decoded.Username !== user){
+    res.status(401).send('This operation is not possible');
+  } else {
+
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -279,6 +319,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
+  }
 });
 
 // error-handling middleware function
