@@ -15,8 +15,8 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-//mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 const jwt_decode = require('jwt-decode');
@@ -148,15 +148,14 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
  *    get:
  *      summary: Return data about a genre (description) by name
  *      tags: [Movies]
- *    parameters:
- *      - name: Name
- *        description: Name of genre
- *        schema:
- *          type: string
- *          format: string
- *    responses:
- *      200:
- *        description: A successful response
+ *      parameters:
+ *        - name: Name
+ *          description: Name of genre
+ *          schema:
+ *            type: string
+ *      responses:
+ *         200:
+ *           description: A successful response
  */
 app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Name })
@@ -176,15 +175,15 @@ app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req,
  *    get:
  *      summary: Return data about a director by name
  *      tags: [Movies]
- *    parameters:
- *      - name: Name
- *        description: Name of director
- *        schema:
- *          type: string
- *          format: string
- *    responses:
- *      200:
- *        description: A successful response
+ *      parameters:
+ *         - name: Name
+ *           description: Name of director
+ *           schema:
+ *             type: string
+ *             format: string
+ *      responses:
+ *         200:
+ *           description: A successful response
  */
 app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.Name })
@@ -204,9 +203,9 @@ app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (r
  *    get:
  *      summary: Get all users
  *      tags: [Users]
- *    responses:
- *      200:
- *        description: A successful response
+ *      responses:
+ *        200:
+ *          description: A successful response
  */
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
@@ -227,15 +226,15 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
  *    get:
  *      summary: Get a user by username
  *      tags: [Users]
- *    parameters:
- *      - name: Username
- *        description: User username
- *        schema:
- *          type: string
- *          format: string
- *    responses:
- *      '200':
- *        description: A successful response
+ *      parameters:
+ *        - name: Username
+ *          description: User username
+ *          schema:
+ *            type: string
+ *            format: string
+ *      responses:
+ *        200:
+ *          description: A successful response
  */
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
