@@ -28,28 +28,24 @@ app.use(cors());
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
+
+
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
-
-
-
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}));
 
-// setup static
+// setup static for static files in 'public' folder
 app.use(express.static('public'));
 
 
 //setting endpoints for API
-
-
 app.get('/', (req, res) => {
   res.status(200).send('Welcome to myFlix app!');
 });
 
 // Get list of all movies
-
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -62,7 +58,6 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 // Get data about a single movie by title
-
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
@@ -76,7 +71,6 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 
 
 // Return data about a genre (description) by name
-
 app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Name })
     .then((movie) => {
@@ -89,7 +83,6 @@ app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req,
 });
 
 // Return data about a director by name
-
 app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.Name })
     .then((movie) => {
