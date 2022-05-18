@@ -1,11 +1,15 @@
-const express = require('express'),
-  morgan = require('morgan'),
-  fs = require('fs'), // import built in node modules fs and path 
-  path = require('path'),
-  bodyParser = require('body-parser'),
-  uuid = require('uuid');
+const express = require('express');
+const morgan = require('morgan');
+const fs = require('fs'); // import built in node modules fs and path 
+const path = require('path');
+const  bodyParser = require('body-parser');
+const uuid = require('uuid');
 const { send } = require('process');
 const mongoose = require('mongoose');
+// import swagger tools for documentation
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+// import models
 const Models = require('./models.js');
 
 const Movies = Models.Movie;
@@ -39,13 +43,65 @@ app.use(morgan('combined', {stream: accessLogStream}));
 // setup static for static files in 'public' folder
 app.use(express.static('public'));
 
+// Swagger options. Extended: https://swagger.io/specification/#infoObject
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      version: '1.0.0',
+      title: 'myFlix API',
+      description: 'Movie API',
+      contact: {
+        name: 'Clara Di Gregorio'
+      },
+      servers: [
+        {
+          'url': 'http://localhost:8080',
+          'description': 'Local server'
+        },
+        {
+          'url': 'https://myflixapi92.herokuapp.com',
+          'description': 'Production server'
+        }
+      ]
+    }
+  },
+  // ['.routes/*.js']
+  apis: ['index.js']
+};
 
-//setting endpoints for API
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// Create endpoint for documentation
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+
+// Routes
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: Welcome page
+ *    tags: [Welcome]
+ *    responses:
+ *      200:
+ *        description: A successful response
+ */
 app.get('/', (req, res) => {
   res.status(200).send('Welcome to myFlix app!');
 });
 
 // Get list of all movies
+/**
+ * @swagger
+ * /movies:
+ *    get:
+ *      summary: Get list of all movies
+ *      tags: [Movies]
+ *      responses:
+ *         200:
+ *            description: A successful response
+ *            content: 
+ *               application/json
+ */
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -58,6 +114,21 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 // Get data about a single movie by title
+/**
+ * @swagger
+ * /movies/{Title}:
+ *    get:
+ *      summary: Get data about a single movie by title
+ *      tags: [Movies]
+ *      parameters:
+ *          - name: Title
+ *            description: Title of movie
+ *            schema:
+ *              type: string
+ *      responses:
+ *           200:
+ *               description: A successful response
+ */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
@@ -71,6 +142,22 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 
 
 // Return data about a genre (description) by name
+/**
+ * @swagger
+ * /genres/{Name}:
+ *    get:
+ *      summary: Return data about a genre (description) by name
+ *      tags: [Movies]
+ *    parameters:
+ *      - name: Name
+ *        description: Name of genre
+ *        schema:
+ *          type: string
+ *          format: string
+ *    responses:
+ *      200:
+ *        description: A successful response
+ */
 app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Name })
     .then((movie) => {
@@ -83,6 +170,22 @@ app.get('/genres/:Name', passport.authenticate('jwt', { session: false }), (req,
 });
 
 // Return data about a director by name
+/**
+ * @swagger
+ * /directors/{Name}:
+ *    get:
+ *      summary: Return data about a director by name
+ *      tags: [Movies]
+ *    parameters:
+ *      - name: Name
+ *        description: Name of director
+ *        schema:
+ *          type: string
+ *          format: string
+ *    responses:
+ *      200:
+ *        description: A successful response
+ */
 app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.Name })
     .then((movie) => {
@@ -95,6 +198,16 @@ app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), (r
 });
 
 // Get all users
+/**
+ * @swagger
+ * /users:
+ *    get:
+ *      summary: Get all users
+ *      tags: [Users]
+ *    responses:
+ *      200:
+ *        description: A successful response
+ */
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .populate('FavoriteMovies', '_id Title')
@@ -108,6 +221,22 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
 });
 
 // Get a user by username
+/**
+ * @swagger
+ * /users/{Username}:
+ *    get:
+ *      summary: Get a user by username
+ *      tags: [Users]
+ *    parameters:
+ *      - name: Username
+ *        description: User username
+ *        schema:
+ *          type: string
+ *          format: string
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .populate('FavoriteMovies', '_id Title')
@@ -121,14 +250,18 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 });
 
 //Add a user
-/* We’ll expect JSON in this format
-{
-  ID: Integer,
-  Username: String,
-  Password: String,
-  Email: String,
-  BirthDate: Date
-}*/
+/** 
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Add a user (register)
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *     responses:
+ *       201:
+ *         description: The user was successfully created
+ */
 app.post('/users', 
 // Validation logic here for request
   [
@@ -173,16 +306,25 @@ app.post('/users',
 
 
 // Update a user's info, by username
-/* We’ll expect JSON in this format
-{
-  Username: String,
-  (required)
-  Password: String,
-  (required)
-  Email: String,
-  (required)
-  BirthDate: Date
-}*/
+/**
+ * @swagger
+ * /users/{Username}:
+ *  put:
+ *    summary: Update a user's info, by username
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: Username
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The user's username
+ *    requestBody:
+ *      required: true
+ *    responses:
+ *      200:
+ *        description: The user was updated
+ */
 app.put('/users/:Username', 
 // Validation logic here for request
   check('Username', 'Username is required and must be at least 5 characters long').isLength({min: 5}),
@@ -222,13 +364,33 @@ app.put('/users/:Username',
       console.error(err);
       res.status(500).send('Error: ' + err);
     } else {
-      res.json(updatedUser);
+      res.status(200).json(updatedUser);
     }
   });
   }
 });
 
 // Add a movie to a user's list of favorites
+/**
+ * @swagger
+ * /users/{Username}/movies/{MovieID}:
+ *   post:
+ *     summary: Add a movie to a user's list of favorites by id
+ *     tags: [Users]
+ *     parameters:
+ *       - name: Username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user's username
+ *       - name: MovieID
+ *         required: true
+ *         description: The movie ID
+ * 
+ *     responses:
+ *       201:
+ *         description: The movie was added
+ */
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   // check for currently logged in user from token
   let authHeader = req.headers.authorization;
@@ -255,6 +417,25 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 // Remove a movie from a user's list of favorites
+/**
+ * @swagger
+ * /users/{Username}/movies/{MovieID}:
+ *   delete:
+ *     summary: Remove a movie from a user's list of favorites by id
+ *     tags: [Users]
+ *     parameters:
+ *       - name: Username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user's username
+ *       - name: MovieID
+ *         required: true
+ *         description: The movie ID
+ *     responses:
+ *       202:
+ *         description: The movie was deleted
+ */
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   // check for currently logged in user from token
   let authHeader = req.headers.authorization;
@@ -281,6 +462,24 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 });
 
 // Delete a user by username
+/**
+ * @swagger
+ * /users/{Username}:
+ *   delete:
+ *     summary: Delete a user by username
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: Username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user's username
+ * 
+ *     responses:
+ *       202:
+ *         description: The movie was deleted
+ */
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   // check for currently logged in user from token
   let authHeader = req.headers.authorization;
@@ -296,7 +495,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
       if (!user) {
         res.status(400).send(req.params.Username + ' was not found');
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(202).send(req.params.Username + ' was deleted.');
       }
     })
     .catch((err) => {
