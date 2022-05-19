@@ -392,11 +392,11 @@ app.put('/users/:Username',
  */
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   // check for currently logged in user from token
-  let authHeader = req.headers.authorization;
+let authHeader = req.headers.authorization;
   let token = authHeader.split(' ')[1];
   let decoded = jwt_decode(token);
   let user = req.params.Username;
-  if (decoded.Username !== user){
+  if (decoded.Username !== user) {
     res.status(401).send('This operation is not possible');
   } else {
 
@@ -414,6 +414,7 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
   });
   }
 });
+
 
 // Remove a movie from a user's list of favorites
 /**
