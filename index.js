@@ -230,7 +230,7 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.find()
-      .populate("FavoriteMovies", "_id Title")
+      .populate("FavoriteMovies")
       .then((users) => {
         res.status(200).json(users);
       })
@@ -531,7 +531,7 @@ app.delete(
  *
  *     responses:
  *       202:
- *         description: The movie was deleted
+ *         description: The user was deleted
  */
 app.delete(
   "/users/:Username",
