@@ -32,7 +32,7 @@ let allowedOrigins = [
   "http://localhost:8080",
   "https://myflixapi92.herokuapp.com/",
   "http://localhost:1234",
-  "https://delicate-crumble-1174d2.netlify.app",
+  "https://delicate-crumble-1174d2.netlify.app/",
 ];
 
 app.use(
