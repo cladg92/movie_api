@@ -6,7 +6,7 @@ This project was part of the [Career Foundry Full Stack Web Development course](
 
 RESTful API that allows client to register, login and access movie data stored in a MongoDB database. 
 
-Check the live documentation: [Swagger](https://myflixapi92.herokuapp.com/documentation/)/[doc](https://myflixapi92.herokuapp.com/documentation.html)
+Check the live documentation: [Swagger](https://myflixapi92.herokuapp.com/documentation/)/[doc](https://myflixapi92.herokuapp.com/documentation.html).
 
 ### Features
 
