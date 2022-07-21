@@ -17,4 +17,4 @@ Check the live documentation: [Swagger](https://myflixapi92.herokuapp.com/docume
 
 ## Technologies
 
-- MERN Stack: MongoDB, Express, React, Node.
+- MERN Stack (MongoDB, Express, React, Node), Mongoose, Swagger.
