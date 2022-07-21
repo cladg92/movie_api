@@ -15,6 +15,6 @@ Check the live documentation: [Swagger](https://myflixapi92.herokuapp.com/docume
 - Movies and users collections are stored in MongoDB and business logic is implemented with Mongoose.
 - API is deployed on Heroku.
 
-## Technologies
+### Technologies
 
-- MERN Stack (MongoDB, Express, React, Node), Mongoose, Swagger.
+MERN Stack (MongoDB, Express, React, Node), Mongoose, Swagger.
